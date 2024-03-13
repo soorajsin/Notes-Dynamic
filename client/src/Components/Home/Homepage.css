@@ -15,6 +15,10 @@
 .home .homeCon .add {
   margin-bottom: 50px;
 }
+.home .homeCon .add .addCon {
+  justify-content: space-between;
+  display: flex;
+}
 .home .homeCon .add button {
   width: 200px;
   font-size: 30px;
@@ -27,6 +31,15 @@
 
 .home .homeCon .add button:hover {
   background-color: rgb(71, 175, 118);
+}
+
+.home .homeCon .add .addCon input {
+  width: 450px;
+  font-size: 30px;
+  padding-left: 10px;
+  border-radius: 10px;
+  height: 40px;
+  border: none;
 }
 
 .home .homeCon .show {

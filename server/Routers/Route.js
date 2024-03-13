@@ -229,7 +229,43 @@ router.delete("/deleteNotes", authentication, async (req, res) => {
 
 router.put("/update", authentication, async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
+    const { sendData, addNoteId } = req.body;
+    if (!sendData || !addNoteId) {
+      res.status(400).json({
+        msg: "data not found"
+      });
+    } else {
+      const user = req.getData;
+      if (!user) {
+        res.status(400).json({
+          msg: "user not found"
+        });
+      } else {
+        // console.log(user);
+        const entry = user.addNotes.findIndex(
+          (addNotes) => addNotes._id.toString() === addNoteId
+        );
+        // console.log(entry);
+        if (entry === -1) {
+          res.status(400).json({
+            msg: "index not found"
+          });
+        } else {
+          // console.log(entry);
+          (user.addNotes[entry].title = sendData.title),
+            (user.addNotes[entry].description = sendData.description);
+
+          const updatedUser = await user.save();
+          // console.log(updatedUser);
+          res.status(201).json({
+            status: 203,
+            msg: "Update successfully done",
+            data: updatedUser
+          });
+        }
+      }
+    }
   } catch (error) {
     res.status(501).json({
       error: error,

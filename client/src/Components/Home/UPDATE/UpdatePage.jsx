@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import apiURL from "../../config";
 import { useState } from "react";
 
 const UpdatePage = () => {
   const api = apiURL.url;
+  const pageNavigate = useNavigate();
   const { addNoteId } = useParams();
   //   console.log(addNoteId);
   const updateAuth = useCallback(async () => {
@@ -53,11 +54,12 @@ const UpdatePage = () => {
   };
   console.log(sendData);
 
-  const updateNotesItem = async (addNoteId, index) => {
+  const updateNotesItem = async () => {
     const { title, description } = sendData;
     if (!title || !description) {
       alert("Please enter all fields");
     } else {
+      console.log("done");
       const token = await localStorage.getItem("token");
       const data = await fetch(`${api}/update`, {
         method: "PUT",
@@ -68,7 +70,13 @@ const UpdatePage = () => {
         body: JSON.stringify({ sendData, addNoteId })
       });
       const res = await data.json();
-      console.log(res);
+      //   console.log(res);
+      if (res.status === 203) {
+        console.log(res);
+        pageNavigate("/home");
+      } else {
+        alert("Not update notes");
+      }
     }
   };
 

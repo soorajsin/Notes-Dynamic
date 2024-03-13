@@ -64,7 +64,12 @@ const HomePage = () => {
       <div className="home">
         <div className="homeCon">
           <div className="add">
-            <button onClick={addNotes}>ADD</button>
+            <div className="addCon">
+              <>
+                <button onClick={addNotes}>ADD</button>
+                <input type="title" placeholder="Search title here ..." />
+              </>
+            </div>
           </div>
           <div className="show">
             {userData
