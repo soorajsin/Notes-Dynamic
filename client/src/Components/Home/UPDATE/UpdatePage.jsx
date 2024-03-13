@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import apiURL from "../../config";
 import { useState } from "react";
@@ -7,7 +7,7 @@ const UpdatePage = () => {
   const api = apiURL.url;
   const { addNoteId } = useParams();
   //   console.log(addNoteId);
-  const updateAuth = async () => {
+  const updateAuth = useCallback(async () => {
     const token = await localStorage.getItem("token");
     const data = await fetch(`${api}/validator`, {
       method: "POST",
@@ -19,18 +19,26 @@ const UpdatePage = () => {
     const res = await data.json();
     if (res.status === 205) {
       //   console.log(res);
-      const checkIndex = await res.data.findIndex(
+      const checkIndex = await res.data.addNotes.find(
         (addNotes) => addNotes._id.toString() === addNoteId
       );
-      console.log(checkIndex);
+      //   console.log("Checked  ", checkIndex);
+      if (!checkIndex) {
+        console.log(" wrong index");
+      } else {
+        setSendData({
+          title: checkIndex.title,
+          description: checkIndex.description
+        });
+      }
     } else {
       console.log("user not found");
     }
-  };
+  }, [api, addNoteId]);
 
   useEffect(() => {
     updateAuth();
-  });
+  }, [updateAuth]);
 
   const [sendData, setSendData] = useState({
     title: "",
@@ -44,6 +52,25 @@ const UpdatePage = () => {
     });
   };
   console.log(sendData);
+
+  const updateNotesItem = async (addNoteId, index) => {
+    const { title, description } = sendData;
+    if (!title || !description) {
+      alert("Please enter all fields");
+    } else {
+      const token = await localStorage.getItem("token");
+      const data = await fetch(`${api}/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        },
+        body: JSON.stringify({ sendData, addNoteId })
+      });
+      const res = await data.json();
+      console.log(res);
+    }
+  };
 
   return (
     <>
@@ -76,7 +103,7 @@ const UpdatePage = () => {
             ></textarea>
           </div>
           <div className="form">
-            <button>Submit</button>
+            <button onClick={updateNotesItem}>Submit</button>
           </div>
           <div className="form">
             <p>

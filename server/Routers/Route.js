@@ -227,4 +227,15 @@ router.delete("/deleteNotes", authentication, async (req, res) => {
   }
 });
 
+router.put("/update", authentication, async (req, res) => {
+  try {
+    console.log(req.body);
+  } catch (error) {
+    res.status(501).json({
+      error: error,
+      msg: "not update"
+    });
+  }
+});
+
 module.exports = router;
