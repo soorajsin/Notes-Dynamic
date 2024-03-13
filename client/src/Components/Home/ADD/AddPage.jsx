@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./AddPage.css";
 import { NavLink } from "react-router-dom";
+import apiURL from "../../config";
 
 const AddPage = () => {
+  const api = apiURL.url;
   const [sendData, setSendData] = useState({
     title: "",
     description: ""
@@ -24,6 +26,17 @@ const AddPage = () => {
       alert("Please enter all fields");
     } else {
       console.log("add");
+      const token = await localStorage.getItem("token");
+      const data = await fetch(`${api}/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        },
+        body: JSON.stringify(sendData)
+      });
+      const res = await data.json();
+      console.log(res);
     }
   };
 

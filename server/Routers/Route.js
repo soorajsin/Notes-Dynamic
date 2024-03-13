@@ -148,4 +148,16 @@ router.post("/logOut", authentication, async (req, res) => {
   }
 });
 
+router.post("/add", authentication, async (req, res) => {
+  try {
+    // console.log(req.body);
+    const { title, description } = req.body;
+  } catch (error) {
+    res.status(501).json({
+      error: error,
+      msg: "not add noted"
+    });
+  }
+});
+
 module.exports = router;
