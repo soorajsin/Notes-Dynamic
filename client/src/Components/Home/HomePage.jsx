@@ -55,8 +55,9 @@ const HomePage = () => {
     }
   };
 
-
-  
+  const updateNotes = (addNoteId, index) => {
+    pageNavigate(`/update/${addNoteId}`);
+  };
 
   return (
     <>
@@ -77,7 +78,10 @@ const HomePage = () => {
                           onClick={() => deleteNotes(addNote._id, index)}
                           className="fa-solid fa-trash"
                         ></i>
-                        <i className="fa-solid fa-pen-to-square"></i>
+                        <i
+                          onClick={() => updateNotes(addNote._id, index)}
+                          className="fa-solid fa-pen-to-square"
+                        ></i>
                       </>
                     </div>
                   </div>
