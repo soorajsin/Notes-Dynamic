@@ -46,8 +46,17 @@ const HomePage = () => {
       body: JSON.stringify({ addNoteId })
     });
     const res = await data.json();
-    console.log(res);
+    // console.log(res);
+    if (res.status === 209) {
+      console.log(res);
+      setUserData(res);
+    } else {
+      alert("Notes not delete");
+    }
   };
+
+
+  
 
   return (
     <>

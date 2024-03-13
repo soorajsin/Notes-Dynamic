@@ -191,6 +191,33 @@ router.delete("/deleteNotes", authentication, async (req, res) => {
       });
     } else {
       const user = req.getData;
+      if (!user) {
+        res.status(400).json({
+          msg: "user not found"
+        });
+      } else {
+        const index = user.addNotes.find(
+          (addNotes) => addNotes._id.toString() === addNoteId
+        );
+
+        if (!index) {
+          res.status(400).json({
+            msg: "index not found"
+          });
+        } else {
+          // console.log(index);
+          user.addNotes = user.addNotes.filter(
+            (addNotes) => addNotes._id.toString() !== addNoteId
+          );
+
+          const updatedUser = await user.save();
+          res.status(201).json({
+            msg: "notes delete successfully",
+            status: 209,
+            data: updatedUser
+          });
+        }
+      }
     }
   } catch (error) {
     res.status(501).json({
