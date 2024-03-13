@@ -23,6 +23,10 @@ const userSchema = mongoose.Schema({
     required: true,
     minlength: 6
   },
+  addNotes:[{
+    title:String,
+    description:String
+  }],
   tokens: [
     {
       token: {

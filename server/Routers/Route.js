@@ -151,11 +151,51 @@ router.post("/logOut", authentication, async (req, res) => {
 router.post("/add", authentication, async (req, res) => {
   try {
     // console.log(req.body);
-    const { title, description } = req.body;
+    const { sendData } = req.body;
+    if (!sendData) {
+      res.status(400).json({
+        msg: "data not found"
+      });
+    } else {
+      const user = req.getData;
+      if (!user) {
+        res.status(400).json({
+          msg: "user not found"
+        });
+      } else {
+        user.addNotes.push(sendData);
+        const updatedUser = await user.save();
+        // console.log(updatedUser);
+        res.status(201).json({
+          status: 208,
+          msg: "successfully add data",
+          data: updatedUser
+        });
+      }
+    }
   } catch (error) {
     res.status(501).json({
       error: error,
       msg: "not add noted"
+    });
+  }
+});
+
+router.delete("/deleteNotes", authentication, async (req, res) => {
+  try {
+    // console.log(req.body);
+    const { addNoteId } = req.body;
+    if (!addNoteId) {
+      res.status(400).json({
+        msg: "data not fund"
+      });
+    } else {
+      const user = req.getData;
+    }
+  } catch (error) {
+    res.status(501).json({
+      error: error,
+      msg: "not delete"
     });
   }
 });

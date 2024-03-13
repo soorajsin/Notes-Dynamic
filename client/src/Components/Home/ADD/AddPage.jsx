@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./AddPage.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import apiURL from "../../config";
 
 const AddPage = () => {
   const api = apiURL.url;
+  const pageNavigate = useNavigate();
   const [sendData, setSendData] = useState({
     title: "",
     description: ""
@@ -33,10 +34,16 @@ const AddPage = () => {
           "Content-Type": "application/json",
           Authorization: token
         },
-        body: JSON.stringify(sendData)
+        body: JSON.stringify({ sendData })
       });
       const res = await data.json();
-      console.log(res);
+      // console.log(res);
+      if (res.status === 208) {
+        console.log(res);
+        pageNavigate("/home");
+      } else {
+        alert("Note not add");
+      }
     }
   };
 
