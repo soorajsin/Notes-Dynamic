@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userdb = require("../Model/userSchema");
 const bcrypt = require("bcryptjs");
+const authentication = require("../Middleware/authentication");
 
 router.post("/register", async (req, res) => {
   try {
@@ -93,6 +94,55 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(400).json({
       msg: "login failed",
+      error: error
+    });
+  }
+});
+
+router.post("/validator", authentication, async (req, res) => {
+  try {
+    // console.log("done");
+    if (req.getData) {
+      res.status(201).json({
+        status: 205,
+        msg: "successfully user found",
+        data: req.getData
+      });
+    } else {
+      res.status(400).json({
+        error: error,
+        msg: "not auth"
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      msg: "not authorized",
+      error: error
+    });
+  }
+});
+
+router.post("/logOut", authentication, async (req, res) => {
+  try {
+    // console.log(req.body);
+    const user = req.getData;
+    if (!user) {
+      res.status(401).json({
+        msg: "user not found"
+      });
+    } else {
+      user.tokens = [];
+      const saveuser = await user.save();
+      // console.log(saveuser);
+      res.status(201).json({
+        status: 206,
+        msg: "logOut successfully done",
+        data: saveuser
+      });
+    }
+  } catch (error) {
+    res.status(501).json({
+      msg: "not log out",
       error: error
     });
   }

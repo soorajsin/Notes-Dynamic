@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.home {
+  width: 1200px;
+  margin: 100px auto;
+  padding: 20px;
+}
+.home .homeCon {
+  width: 1200px;
+  margin: auto;
+}
+.home .homeCon .add {
+  margin-bottom: 50px;
+}
+.home .homeCon .add button {
+  width: 200px;
+  font-size: 30px;
+  border: none;
+  border-radius: 10px;
+  color: #ffd;
+  background-color: rgb(53, 86, 194);
+  cursor: pointer;
+}
+
+.home .homeCon .add button:hover {
+  background-color: rgb(71, 175, 118);
+}
