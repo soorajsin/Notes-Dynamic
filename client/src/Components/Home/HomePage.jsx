@@ -6,12 +6,15 @@ import apiURL from "../config";
 const HomePage = () => {
   const api = apiURL.url;
   const pageNavigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState(""); // State to track search term
+  const [filteredNotes, setFilteredNotes] = useState([]); // State to store filtered notes
+
   const addNotes = () => {
     pageNavigate("/add");
   };
 
   const [userData, setUserData] = useState();
-  // console.log(userData);
+
   const homeAuth = useCallback(async () => {
     const token = await localStorage.getItem("token");
     const data = await fetch(`${api}/validator`, {
@@ -22,10 +25,9 @@ const HomePage = () => {
       }
     });
     const res = await data.json();
-    // console.log(res);
     if (res.status === 205) {
-      // console.log(res);
       setUserData(res);
+      setFilteredNotes(res.data.addNotes); // Set filteredNotes initially with all notes
     } else {
       console.log("user not found");
     }
@@ -46,17 +48,28 @@ const HomePage = () => {
       body: JSON.stringify({ addNoteId })
     });
     const res = await data.json();
-    // console.log(res);
     if (res.status === 209) {
-      console.log(res);
-      setUserData(res);
+      setUserData(res); // Update user data after deletion
+      setFilteredNotes((prevNotes) =>
+        prevNotes.filter((note) => note._id !== addNoteId)
+      ); // Remove deleted note from filteredNotes
     } else {
-      alert("Notes not delete");
+      alert("Notes not deleted");
     }
   };
 
   const updateNotes = (addNoteId, index) => {
     pageNavigate(`/update/${addNoteId}`);
+  };
+
+  // Function to handle search input change
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    // Filter notes based on the search term
+    const filtered = userData.data.addNotes.filter((note) =>
+      note.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredNotes(filtered);
   };
 
   return (
@@ -67,31 +80,35 @@ const HomePage = () => {
             <div className="addCon">
               <>
                 <button onClick={addNotes}>ADD</button>
-                <input type="title" placeholder="Search title here ..." />
+                <input
+                  type="text"
+                  placeholder="Search title here ..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+                {/* show new modified notes on top */}
               </>
             </div>
           </div>
           <div className="show">
-            {userData
-              ? userData.data.addNotes.map((addNote, index) => (
-                  <div key={index} className="show-data">
-                    <h3>{addNote.title}</h3>
-                    <p>{addNote.description}</p>
-                    <div className="action">
-                      <>
-                        <i
-                          onClick={() => deleteNotes(addNote._id, index)}
-                          className="fa-solid fa-trash"
-                        ></i>
-                        <i
-                          onClick={() => updateNotes(addNote._id, index)}
-                          className="fa-solid fa-pen-to-square"
-                        ></i>
-                      </>
-                    </div>
-                  </div>
-                ))
-              : ""}
+            {filteredNotes.map((addNote, index) => (
+              <div key={index} className="show-data">
+                <h3>{addNote.title}</h3>
+                <p>{addNote.description}</p>
+                <div className="action">
+                  <>
+                    <i
+                      onClick={() => deleteNotes(addNote._id, index)}
+                      className="fa-solid fa-trash"
+                    ></i>
+                    <i
+                      onClick={() => updateNotes(addNote._id, index)}
+                      className="fa-solid fa-pen-to-square"
+                    ></i>
+                  </>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
